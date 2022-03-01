@@ -12,4 +12,13 @@ public class AccessData {
 
     public AccessData() {
     }
+
+    @Override
+    public String toString() {
+        return "AccessData{" +
+                "sourceData=" + sourceData +
+                ", score=" + score +
+                ", id='" + id + '\'' +
+                '}';
+    }
 }
