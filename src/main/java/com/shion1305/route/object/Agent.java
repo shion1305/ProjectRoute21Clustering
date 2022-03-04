@@ -11,4 +11,16 @@ public class Agent {
     public Agent() {
 
     }
+
+    @Override
+    public String toString() {
+        return "Agent{" +
+                "hostname='" + hostname + '\'' +
+                ", name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                ", ephemeral_id='" + ephemeral_id + '\'' +
+                ", type='" + type + '\'' +
+                ", version='" + version + '\'' +
+                '}';
+    }
 }
