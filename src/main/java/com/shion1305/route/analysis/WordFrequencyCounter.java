@@ -3,67 +3,74 @@ package com.shion1305.route.analysis;
 import com.shion1305.route.io.DataReader;
 import com.shion1305.route.object.AccessData;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class WordFrequencyCounter {
 
     public static FrequencyData frequencyData = new FrequencyData(1);
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         //read data
-        AccessData[] data = DataReader.readData("data2021-1210.json");
-        for (AccessData d : data) {
-            processString(d.sourceData.url);
-            d.sourceData.headers.values().forEach(WordFrequencyCounter::processString);
+//        String[] files = new String[]{"data2021-1001.json", "data2021-1002.json", "data2021-1003.json", "data2021-1004.json", "data2021-1005.json", "data2021-1006.json", "data2021-1007.json",};
+        String[] files = new File("datasets").list();
+
+        ExecutorService service = Executors.newFixedThreadPool(3);
+        for (String file : files) {
+            service.submit(() -> {
+                System.out.println(file);
+                try {
+                    List<AccessData> data = DataReader.readData(file);
+                    for (AccessData d : data) {
+                        if (!d.sourceData.valid) continue;
+                        processString(d.sourceData.url);
+                        for (String q : d.sourceData.queries.values()) {
+                            processString(q);
+                        }
+                        d.sourceData.headers.values().forEach(WordFrequencyCounter::processString);
+                    }
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            });
+        }
+        service.shutdown();
+        service.awaitTermination(1000000, TimeUnit.HOURS);
+        try (FileWriter writer = new FileWriter("out")) {
+            writer.write(frequencyData.export(""));
         }
         System.out.println("COMPLETE");
-
-
-//        HashMap<String, Integer> dFrequency3 = new HashMap<>();
-//        for (int i = 0; i < 62; i++) {
-//            for (int j = 0; j < 62; j++) {
-//                for (int k = 0; k < 62; k++) {
-//                    if (strPattern[i][j][k] != 0) {
-//                        dFrequency3.put(new StringBuilder().append(toChar(i)).append(toChar(j)).append(toChar(k)).toString(), strPattern[i][j][k]);
-//                    }
-//                }
-//            }
-//        }
-//        try (FileWriter writer = new FileWriter("FrequencyResult/result.csv")) {
-//            for (Map.Entry<String, Integer> d : dFrequency3.entrySet()) {
-//                writer.write(d.getKey());
-//                writer.write(",");
-//                writer.write(String.valueOf(d.getValue()));
-//                writer.write("\n");
-//                System.out.println(d.getKey() + "|" + d.getValue());
-//            }
-//        }
-
     }
+
 
     public static void processString(String s) {
         int status = 0;
         ArrayList<Integer> indexes = new ArrayList<>();
-        for (int i = 0; i < FrequencyData.MAXLEVEL; i++) {
-            indexes.add(62);
-        }
         for (int i = 0; i < s.length(); i++) {
             int c = checkIndex(s.charAt(i));
+            if (indexes.size() == FrequencyData.MAXLEVEL) {
+                indexes.remove(0);
+            }
             if (c > -1) {
                 indexes.add(c);
-                indexes.remove(0);
-                if (status++ > 2) {
-                    Integer[] aindex = new Integer[FrequencyData.MAXLEVEL];
+                if (status > 1) {
+                    if (status < FrequencyData.MAXLEVEL) status++;
+                    Integer[] aindex = new Integer[status];
                     aindex = indexes.toArray(aindex);
-                    frequencyData.get(aindex).sum++;
+                    frequencyData.get(aindex).ends++;
+                } else {
+                    status++;
                 }
             } else {
                 status = 0;
                 indexes.clear();
-                for (int j = 0; j < FrequencyData.MAXLEVEL; j++) {
-                    indexes.add(62);
-                }
             }
         }
     }
@@ -84,8 +91,9 @@ public class WordFrequencyCounter {
 }
 
 class FrequencyData {
-    public final static int MAXLEVEL = 7;
+    public final static int MAXLEVEL = 15;
     int level;
+    int ends = 0;
     int sum = 0;
     FrequencyData[] child = new FrequencyData[63];
 
@@ -102,13 +110,28 @@ class FrequencyData {
         if (level == FrequencyData.MAXLEVEL + 1) return null;
         if (child[i[0]] == null) child[i[0]] = new FrequencyData(level + 1);
         if (i.length == 1) return child[i[0]];
-        Integer[] i1 = new Integer[i.length-1];
-        System.arraycopy(i, 1, i1, 0, i.length-1);
+        Integer[] i1 = new Integer[i.length - 1];
+        System.arraycopy(i, 1, i1, 0, i.length - 1);
         return child[i[0]].get(i1);
     }
 
     int sumChild() {
-        if (level == MAXLEVEL) return sum;
-        return Arrays.stream(child).parallel().reduce(new FrequencyData(level, 0), ((frequencyData, frequencyData2) -> new FrequencyData(frequencyData.level, frequencyData.sumChild() + frequencyData.sumChild()))).sum;
+        if (level == MAXLEVEL) return ends;
+        return Arrays.stream(child).parallel().reduce(new FrequencyData(level, 0), ((frequencyData, frequencyData2) -> new FrequencyData(frequencyData.level, frequencyData.sumChild() + frequencyData.sumChild()))).sum + ends;
+    }
+
+    public String export(String prefix) {
+        StringBuilder builder = new StringBuilder();
+        if (ends != 0) builder.append(prefix).append(",").append(ends).append("\n");
+        if (level != FrequencyData.MAXLEVEL) {
+            for (int i = 0; i < 63; i++) {
+                if (child[i] != null) {
+                    StringBuilder builder1 = new StringBuilder();
+                    builder1.append(prefix).append(WordFrequencyCounter.toChar(i));
+                    builder.append(child[i].export(builder1.toString()));
+                }
+            }
+        }
+        return builder.toString();
     }
 }
