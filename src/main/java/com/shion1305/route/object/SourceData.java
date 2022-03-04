@@ -18,6 +18,7 @@ public class SourceData {
     public Date timestamp;
     public HashMap<String, String> queries;
     public HashMap<String, String> headers;
+    public boolean valid = true;
 
     public SourceData(@JsonProperty("request") String request,
                       @JsonProperty("url") String url, @JsonProperty("agent") Agent agent, @JsonProperty("geoip") GeoIp geoip,
@@ -26,7 +27,10 @@ public class SourceData {
         this.request = request;
         this.url = url;
         queries = new HashMap<>();
-        if (url == null) throw new IllegalStateException();
+        if (url == null) {
+            valid = false;
+            return;
+        }
         if (url.indexOf('?') != -1) {
             url_path = url.substring(0, url.indexOf('?'));
             String query = url.substring(url.indexOf("?") + 1);
