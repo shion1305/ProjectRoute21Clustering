@@ -32,7 +32,6 @@ public class WordExtractor {
                         for (String q : d.sourceData.queries.values()) {
                             processString(q,d);
                         }
-                        d.sourceData.headers.values().forEach(WordFrequencyCounter::processString);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
