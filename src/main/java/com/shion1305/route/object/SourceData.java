@@ -36,7 +36,7 @@ public class SourceData {
             String query = url.substring(url.indexOf("?") + 1);
             for (String q : query.split("&")) {
                 if (q.contains("=")) {
-                    queries.put(q.substring(0, q.indexOf("=")), q.substring(q.indexOf("=")) + 1);
+                    queries.put(q.substring(0, q.indexOf("=")), q.substring(q.indexOf("=")+1));
                 }
             }
         } else {
