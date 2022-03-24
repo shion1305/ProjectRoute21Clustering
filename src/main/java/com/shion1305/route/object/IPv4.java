@@ -1,9 +1,10 @@
 package com.shion1305.route.object;
 
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class IPv4 extends SpecificFormat {
+class IPv4 extends SpecificFormat implements Serializable {
     int[] ip = new int[4];
 
     public IPv4(String ip) {

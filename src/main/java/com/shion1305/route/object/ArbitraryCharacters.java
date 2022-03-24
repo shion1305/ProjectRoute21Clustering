@@ -1,6 +1,8 @@
 package com.shion1305.route.object;
 
-public class ArbitraryCharacters implements TextGroup {
+import java.io.Serializable;
+
+public class ArbitraryCharacters implements TextGroup, Serializable {
     public enum Type {
         NUMBER, CHARACTER, STRING
     }

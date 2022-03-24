@@ -1,6 +1,8 @@
 package com.shion1305.route.object;
 
-public class WordGroup implements TextGroup {
+import java.io.Serializable;
+
+public class WordGroup implements TextGroup , Serializable {
     public String word;
 //    public long id;
 

@@ -3,13 +3,14 @@ package com.shion1305.route.object;
 
 import com.shion1305.route.process.WordChecker;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ProcessedAccessData {
+public class ProcessedAccessData implements Serializable {
     ArrayList<ArrayList<TextGroup>> pathD = new ArrayList<>();
     HashMap<ArrayList<TextGroup>, ArrayList<TextGroup>> queries = new HashMap<>();
 
