@@ -87,11 +87,9 @@ public class WordExtractor {
         }
     }
 
-    public static WordExtractor readFromPrevious() {
+    public static FrequencyMap readFromPrevious() {
         try (FileInputStream stream = new FileInputStream("frequencyData")) {
-            WordExtractor extractor = new WordExtractor();
-            extractor.frequencyMap = (FrequencyMap) new ObjectInputStream(stream).readObject();
-            return extractor;
+            return (FrequencyMap) new ObjectInputStream(stream).readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -128,33 +126,3 @@ public class WordExtractor {
     }
 }
 
-class Params implements Serializable{
-    Integer count = 1;
-    ArrayList<String> ips = new ArrayList<>();
-    Date first;
-    Date last;
-}
-
-class FrequencyMap extends HashMap<String, Params> implements Serializable {
-    public void addValue(String key, AccessData tData) {
-        Params p;
-        if (this.containsKey(key)) {
-            p = this.get(key);
-            p.count++;
-            if (tData.sourceData.timestamp.before(p.first)) {
-                p.first = tData.sourceData.timestamp;
-            } else if (tData.sourceData.timestamp.after(p.last)) {
-                p.last = tData.sourceData.timestamp;
-            }
-            if (!p.ips.contains(tData.sourceData.source_ip)) {
-                p.ips.add(tData.sourceData.source_ip);
-            }
-        } else {
-            p = new Params();
-            p.ips.add(tData.sourceData.geoIp.ip);
-            p.first = tData.sourceData.timestamp;
-            p.last = tData.sourceData.timestamp;
-        }
-        this.put(key, p);
-    }
-}
