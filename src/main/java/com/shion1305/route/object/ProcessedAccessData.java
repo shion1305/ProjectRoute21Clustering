@@ -61,17 +61,15 @@ public class ProcessedAccessData implements Serializable {
             }
             switch (status) {
                 case INITIAL:
-                    builder.append(in.charAt(i));
                     break;
                 case CAPTURE_MODE:
                     out.add(WordChecker.checkIfWord(builder.toString()));
-                    builder = new StringBuilder();
                     break;
                 case NUMBER_MODE:
                     out.add(new ArbitraryCharacters(builder.toString()));
-                    builder = new StringBuilder();
                     break;
             }
+            builder = new StringBuilder().append(in.charAt(i));
             status = next;
         }
         switch (status) {
@@ -92,6 +90,49 @@ public class ProcessedAccessData implements Serializable {
 
     public void compare1(ProcessedAccessData data) {
 
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder d = new StringBuilder();
+        for (var v : pathD) {
+            d.append("/");
+            d.append(stringConverter(v));
+        }
+        StringBuilder b1 = new StringBuilder();
+        for (var v : queries.entrySet()) {
+            b1.append(stringConverter(v.getKey()));
+            b1.append(" = ");
+            b1.append(stringConverter(v.getValue()));
+            b1.append(",        ");
+        }
+
+        return "ProcessedAccessData{" +
+                "pathD=" + d +
+                ", queries=" + b1.toString() +
+                '}';
+    }
+
+    public String stringConverter(ArrayList<TextGroup> v) {
+        StringBuilder d = new StringBuilder();
+        for (var v1 : v) {
+            if (v1.getClass().equals(ArbitraryCharacters.class)) {
+                d.append('[');
+                d.append(((ArbitraryCharacters) v1).text);
+                d.append(']');
+            } else if (v1.getClass().equals(WordGroup.class)) {
+                d.append('(');
+                d.append(((WordGroup) v1).word);
+                d.append(')');
+            } else if (v1.getClass().equals(IPv4.class)) {
+                d.append('{');
+                d.append(((IPv4) v1).toString());
+                d.append('}');
+            } else {
+                d.append("UNKNOWN***");
+            }
+        }
+        return d.toString();
     }
 }
 
