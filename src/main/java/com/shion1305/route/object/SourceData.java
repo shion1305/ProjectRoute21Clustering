@@ -2,10 +2,11 @@ package com.shion1305.route.object;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 
-public class SourceData {
+public class SourceData implements Serializable {
     public String request;
     public String url;
     public String url_path;

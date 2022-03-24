@@ -1,6 +1,8 @@
 package com.shion1305.route.object;
 
-public class Agent {
+import java.io.Serializable;
+
+public class Agent implements Serializable {
     private String hostname;
     private String name;
     private String id;

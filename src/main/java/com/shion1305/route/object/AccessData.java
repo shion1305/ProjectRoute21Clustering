@@ -2,7 +2,9 @@ package com.shion1305.route.object;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AccessData {
+import java.io.Serializable;
+
+public class AccessData implements Serializable {
     @JsonProperty("_source")
     public SourceData sourceData;
     @JsonProperty("_score")
