@@ -2,7 +2,6 @@ package com.shion1305.route.object;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,7 +13,9 @@ public class ProcessedAccessData {
     public ProcessedAccessData(String path, HashMap<String, String> queries) {
         String[] pathStrings = path.split("/");
 
+
     }
+
 
     public static ArrayList<TextGroup> convertToTextGroup(String in) {
         ArrayList<TextGroup> result = new ArrayList<>();
@@ -32,64 +33,46 @@ public class ProcessedAccessData {
         return result;
     }
 
-    public static ArrayList<TextGroup> convertToWord(){
+    enum ProcessStringEnum {
+        INPUT_MODE, NO_MODE
+    }
+
+
+    public static ArrayList<TextGroup> extractWords(ArbitraryCharacters group) {
+        ProcessStringEnum status = ProcessStringEnum.NO_MODE;
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < group.text.length(); i++) {
+            if (isAz(group.text.charAt(i))) {
+                builder.append(group.text.charAt(i));
+                status = ProcessStringEnum.INPUT_MODE;
+            } else if (status == ProcessStringEnum.INPUT_MODE) {
+
+                builder = new StringBuilder();
+                status = ProcessStringEnum.NO_MODE;
+            }
+        }
+        if (status == ProcessStringEnum.INPUT_MODE) {
+
+        }
+        return null;
+    }
+
+    public static WordGroup isWord() {
+
+        return null;
+    }
+
+
+    public static boolean isAz(char i) {
+        //return true if i is A-Z or a-z
+        return (i > 96 && i < 123) || (i > 64 && i < 91);
+    }
+
+
+    public static ArrayList<TextGroup> convertToWord() {
         return null;
 
     }
 }
 
 
-interface TextGroup {
-
-}
-
-class WordGroup implements TextGroup {
-
-}
-
-class ArbitraryCharacters implements TextGroup {
-    String text;
-
-    public ArbitraryCharacters(String text) {
-        this.text = text;
-    }
-
-    @Override
-    public String toString() {
-        return "ArbitraryCharacters{" +
-                "text='" + text + '\'' +
-                '}';
-    }
-}
-
-class SpecificFormat implements TextGroup {
-
-}
-
-class IPv4 extends SpecificFormat {
-    int[] ip = new int[4];
-
-    public IPv4(String ip) {
-        Matcher m = Pattern.compile("^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)").matcher(ip);
-        if (!m.matches()) throw new IllegalArgumentException("INPUT \"" + ip + "\" is not recognized as IPv4 format");
-        for (int i = 0; i < 4; i++) {
-            this.ip[i] = Integer.parseInt(m.group(i + 1));
-        }
-    }
-
-    public IPv4(int[] ip) {
-        if (ip.length != 4) throw new IllegalArgumentException();
-        this.ip = ip;
-    }
-
-    @Override
-    public String toString() {
-        return "IPv4{" +
-                "ip=" + ip[0] + "." + ip[1] + "." + ip[2] + "." + ip[3] +
-                '}';
-    }
-}
-
-enum CharacterType {
-    CHARACTER, NUMBER
-}
