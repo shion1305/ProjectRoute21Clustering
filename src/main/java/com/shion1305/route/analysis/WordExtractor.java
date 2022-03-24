@@ -80,7 +80,7 @@ public class WordExtractor {
     }
 
     public void exportAsStream() {
-        try (FileOutputStream baos = new FileOutputStream("frequencyData"); ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("frequencyData"))) {
             oos.writeObject(frequencyMap);
         } catch (IOException e) {
             e.printStackTrace();
@@ -88,8 +88,8 @@ public class WordExtractor {
     }
 
     public static FrequencyMap readFromPrevious() {
-        try (FileInputStream stream = new FileInputStream("frequencyData")) {
-            return (FrequencyMap) new ObjectInputStream(stream).readObject();
+        try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream("frequencyData"))) {
+            return (FrequencyMap) stream.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
