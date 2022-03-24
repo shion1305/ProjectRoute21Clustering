@@ -13,6 +13,10 @@ public class ProcessedAccessData {
     ArrayList<ArrayList<TextGroup>> pathD = new ArrayList<>();
     HashMap<ArrayList<TextGroup>, ArrayList<TextGroup>> queries = new HashMap<>();
 
+    public ProcessedAccessData(AccessData d) {
+        this(d.sourceData.url_path, d.sourceData.queries);
+    }
+
     public ProcessedAccessData(String path, HashMap<String, String> queries) {
         String[] pathStrings = path.split("/");
         for (var p : pathStrings) {
@@ -85,7 +89,7 @@ public class ProcessedAccessData {
         return (i > 96 && i < 123) || (i > 64 && i < 91);
     }
 
-    public void compare1(ProcessedAccessData data){
+    public void compare1(ProcessedAccessData data) {
 
     }
 }
