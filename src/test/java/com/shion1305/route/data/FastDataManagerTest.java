@@ -1,4 +1,4 @@
-package com.shion1305.route;
+package com.shion1305.route.data;
 
 import com.shion1305.route.object.ProcessedAccessData;
 import org.junit.jupiter.api.Test;
