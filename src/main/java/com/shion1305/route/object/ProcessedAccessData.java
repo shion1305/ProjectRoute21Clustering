@@ -11,8 +11,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ProcessedAccessData implements Serializable {
-    ArrayList<ArrayList<TextGroup>> pathD = new ArrayList<>();
-    HashMap<ArrayList<TextGroup>, ArrayList<TextGroup>> queries = new HashMap<>();
+    public static final long serialVersionUID = 8570353596464870102L;
+    public ArrayList<ArrayList<TextGroup>> pathD = new ArrayList<>();
+    public HashMap<ArrayList<TextGroup>, ArrayList<TextGroup>> queries = new HashMap<>();
 
     public ProcessedAccessData(AccessData d) {
         this(d.sourceData.url_path, d.sourceData.queries);

@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class IPv4 extends SpecificFormat implements Serializable {
+public class IPv4 extends SpecificFormat implements Serializable {
+    public static final long serialVersionUID = 7827725166551021656L;
     int[] ip = new int[4];
 
     public IPv4(String ip) {
