@@ -18,7 +18,11 @@ public class ExtractRandomData {
         Scanner scanner=new Scanner(System.in);
         while (scanner.hasNextLine()){
             String query= scanner.nextLine();
-
+            data.forEach(accessData -> {
+                if(accessData.sourceData.url.contains(query)){
+                    System.out.println(accessData.sourceData.url);
+                }
+            });
         }
 
     }
