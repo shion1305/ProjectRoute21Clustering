@@ -27,4 +27,9 @@ public class IPv4 extends SpecificFormat implements Serializable {
                 "ip=" + ip[0] + "." + ip[1] + "." + ip[2] + "." + ip[3] +
                 '}';
     }
+
+    @Override
+    public String getText() {
+        return ip[0] + "." + ip[1] + "." + ip[2] + "." + ip[3] ;
+    }
 }

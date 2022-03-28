@@ -3,6 +3,11 @@ package com.shion1305.route.object;
 import java.io.Serializable;
 
 public class ArbitraryCharacters implements TextGroup, Serializable {
+    @Override
+    public String getText() {
+        return text;
+    }
+
     public enum Type {
         NUMBER, CHARACTER, STRING
     }

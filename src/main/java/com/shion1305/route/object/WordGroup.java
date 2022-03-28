@@ -9,4 +9,9 @@ public class WordGroup implements TextGroup , Serializable {
     public WordGroup(String word) {
         this.word = word;
     }
+
+    @Override
+    public String getText() {
+        return word;
+    }
 }
