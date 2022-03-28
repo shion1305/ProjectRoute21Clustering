@@ -1,27 +1,30 @@
 package com.shion1305.route.data;
 
-import com.shion1305.route.object.ProcessedAccessData;
+import com.shion1305.route.object.IPv4;
+import com.shion1305.route.object.TextGroup;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class FastDataManagerTest {
 
     @Test
     void readDataFast() {
-        ArrayList<ProcessedAccessData> data = new ArrayList<>();
-        data.addAll(FastDataManager.readDataFast("data2021-1001"));
-        data.addAll(FastDataManager.readDataFast("data2021-1002"));
-        data.addAll(FastDataManager.readDataFast("data2021-1003"));
-        data.addAll(FastDataManager.readDataFast("data2021-1004"));
-        data.addAll(FastDataManager.readDataFast("data2021-1005"));
-        data.addAll(FastDataManager.readDataFast("data2021-1006"));
-        data.addAll(FastDataManager.readDataFast("data2021-1007"));
-        data.addAll(FastDataManager.readDataFast("data2021-1008"));
-        data.addAll(FastDataManager.readDataFast("data2021-1009"));
-        data.addAll(FastDataManager.readDataFast("data2021-1010"));
-        System.out.println(data.size());
+        String[] files = new File("fastData").list();
+        for (String file : files) {
+            var d = FastDataManager.readDataFast(file);
+            begin:
+            for (var data : d) {
+                for (ArrayList<TextGroup> txg : data.pathD) {
+                    for (var tx : txg) {
+                        if (tx.getClass().equals(IPv4.class) && txg.size() > 1) {
+                            System.out.println(data);
+                            continue begin;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
