@@ -1,5 +1,8 @@
 package com.shion1305.route.analysis;
 
+import com.fasterxml.jackson.core.exc.StreamWriteException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shion1305.route.io.DataReader;
 import com.shion1305.route.object.AccessData;
 
@@ -18,7 +21,7 @@ public class WordExtractor {
         WordExtractor extractor = new WordExtractor();
         extractor.processData();
         export(extractor.frequencyMap);
-        extractor.exportAsStream();
+        extractor.exportAsJson();
         System.out.println("COMPLETE");
     }
 
@@ -79,18 +82,24 @@ public class WordExtractor {
         return frequencyMap;
     }
 
-    public void exportAsStream() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("frequencyData"))) {
-            oos.writeObject(frequencyMap);
+    public void exportAsJson() {
+        ObjectMapper mapper=new ObjectMapper();
+        try{
+            mapper.writeValue(new File("FrequencyMap.json"),frequencyMap);
+        } catch (StreamWriteException e) {
+            e.printStackTrace();
+        } catch (DatabindException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static FrequencyMap readFromPrevious() {
-        try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream("frequencyData"))) {
-            return (FrequencyMap) stream.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        ObjectMapper mapper=new ObjectMapper();
+        try {
+            return mapper.readValue(new File("FrequencyMap.json"),FrequencyMap.class);
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
