@@ -5,7 +5,7 @@ import com.shion1305.route.object.AccessData;
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class FrequencyMap extends HashMap<String, Params> implements Serializable {
+public class FrequencyMap extends HashMap<String, Params> {
     public void addValue(String key, AccessData tData) {
         Params p;
         if (this.containsKey(key)) {
