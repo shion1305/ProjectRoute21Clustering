@@ -3,6 +3,7 @@ package com.shion1305.route.object;
 import java.io.Serializable;
 
 public class ArbitraryCharacters implements TextGroup, Serializable {
+    public static final long serialVersionUID = 4680154459666123385L;
     @Override
     public String getText() {
         return text;
