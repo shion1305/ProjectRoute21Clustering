@@ -6,26 +6,8 @@ import com.shion1305.route.object.ProcessedAccessData;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class FastDataManager {
-    public static void main(String[] args) throws InterruptedException {
-        ExecutorService service = Executors.newFixedThreadPool(3);
-        for (String file : new File("datasets").list()) {
-            service.submit(()->{
-                try {
-                    generate(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-        service.awaitTermination(1000000, TimeUnit.MINUTES);
-        service.shutdown();
-    }
-
     public static void generate(String file) throws IOException {
         ArrayList<ProcessedAccessData> database = new ArrayList<>();
         var data = DataReader.readData(file);
