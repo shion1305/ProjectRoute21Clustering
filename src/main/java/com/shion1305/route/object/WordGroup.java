@@ -15,4 +15,10 @@ public class WordGroup implements TextGroup, Serializable {
     public String getText() {
         return word;
     }
+
+    @Override
+    public String toString() {
+        return "(" + word  +
+                ')';
+    }
 }
