@@ -7,21 +7,22 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-public class ExtractRandomData {
+public class ExtractRandomDataTest {
     public static void main(String[] args) throws IOException {
-        printAccessDataWithRandomPath();
-
+//        printAccessDataWithRandomPath();
+        printRandomData();
     }
 
     public static void printRandomData() throws IOException {
         Random r = new Random();
         String[] files = new File("datasets").list();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 20; i++) {
             List<AccessData> d = DataReader.readData(files[Math.abs(r.nextInt()) % files.length]);
             while (true) {
                 AccessData data = d.get(Math.abs(r.nextInt()) % d.size());
-                if (data.sourceData.url.contains("?")) {
+                if (!data.sourceData.url.startsWith("http://")&&data.sourceData.url.length()>2) {
                     System.out.println(data.sourceData.url);
+                    System.out.println(data.sourceData.request);
                     break;
                 }
             }
